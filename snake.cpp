@@ -1,12 +1,13 @@
 #include<iostream>
+#include <unistd.h>
 #include<conio.h>
-
+#include<string>
 
 using namespace std;
 
 bool gameOver;
 
-const int width  = 20;
+const int width  = 40;
 const int height = 20;
 
 int x,y,fruitX,fruitY,score;
@@ -20,15 +21,18 @@ void Setup()
     gameOver = false;
     dir = Stop;
     x = width/2;
-    y = width/2;
+    y = height/2;
     fruitX = rand() % (width-2);
     fruitY = rand() % (height-2);
     nTail = 0;
 
 }
 
+int count = 0;
+
 void Draw()
-{   system("cls");
+{   system("clear");
+    int flag = 0;
     bool print = false;
     for(int j=0; j <= height ;  j++)      
     {
@@ -37,17 +41,23 @@ void Draw()
             for(int k=0; k < nTail; k++)        // checking for tail section
             {
                 if(i==tailX[k] &&  j== tailY[k])
-                 { cout << "o"; 
-                   print = true; 
+                 { cout << "o "; 
+                   print = true;
+                   count++; 
                  }
             }
-            if(i==width){cout << "#" << endl;}
-            else if(j==0){cout << "#";}
-            else if(i==0) {cout << "#";} 
-            else if(j==height){cout << "#";}
-            else if(i==x && j==y){cout << "O";}                     // Head
-            else if(i==fruitX && j==fruitY){ cout << "*";} // fruit section
-            else if (print == false) {cout << " ";}         // empty space
+            if(i==width){cout <<"# " << endl;}
+            else if(j==0){cout << "# ";}
+            else if(i==0) {cout << "# ";} 
+            else if(j==height){cout << " #";}
+            else if(i==x && j==y){
+                if (flag==0) {cout << "O ";}
+                else{cout<<"O";};
+            flag=1;
+         }                     // Head
+            else if(i==fruitX && j==fruitY){ cout << "* ";
+         } // fruit section
+            else if (print == false) {cout << "  ";}         // empty space
             print = false;
         }
     }
@@ -59,7 +69,7 @@ void Input()
 {
     if (_kbhit())
     {
-        switch (_getch())
+        switch (getch())
         {
         case 'a':
             dir = Left;
@@ -143,11 +153,9 @@ int main()
         while(!gameOver)
         {
             Draw();
-
             Input();
             Logic();
-            _sleep(80);
-            
+            usleep(100000);
         }
         cout << " GAME IS OVER !!!" << endl;
         cout << " Your score is: " << score << endl;
@@ -158,3 +166,4 @@ int main()
     }
     return 0;
 }
+
